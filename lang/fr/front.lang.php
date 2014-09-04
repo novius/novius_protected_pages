@@ -9,8 +9,9 @@
  */
 
 return array(
-    'Login' => 'Login',
-    'password' => 'mot de passe',
+    'Please sign in to access this page' => 'Veuillez vous connecter pour accéder à cette page',
+    'Login:' => 'Login :',
+    'Password:' => 'Mot de passe :',
     'Connection' => 'Connexion',
     'Bad login or password.' => 'Login ou mot de passe incorrect.',
 );

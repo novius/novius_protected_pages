@@ -51,6 +51,12 @@ class Controller_Front_Protectedpages extends Controller_Front_Application
                     \Session::set_flash('protected_pages_login', \Input::post('login', ''));
                 }
             } elseif ($enhancer_url == 'login') {
+                if ($protected_pages[$page->page_id] === true) {
+                    unset($protected_pages[$page->page_id]);
+                    \Session::set('protected_pages', $protected_pages);
+                    \Session::write();
+                };
+
                 $wysiwyg_name = $this->main_controller->getWysiwygName();
                 \Event::register_function('front.parse_wysiwyg', function (&$content) use ($wysiwyg_name) {
                     if ($wysiwyg_name === $this->main_controller->getWysiwygName()) {

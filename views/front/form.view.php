@@ -19,8 +19,9 @@ if (!empty($error)) {
     <?php
 }
 ?>
-        <p><input type="text" name="login" value="<?= e(\Input::post('login', '')); ?>" placeholder="<?= e(__('Login')) ?>" /></p>
-        <p><input type="password" name="password" placeholder="<?= e(__('password')) ?>" /></p>
-        <p><input type="submit" value="<?= e(__('Connection')) ?>" /></p>
+        <p class="protected_pages_title"><?= e(__('Please sign in to access this page')) ?></p>
+        <p class="protected_pages_login"><?= e(__('Login:')) ?> <input type="text" name="login" value="<?= e(\Input::post('login', '')); ?>" /></p>
+        <p class="protected_pages_password"><?= e(__('Password:')) ?> <input type="password" name="password" /></p>
+        <p class="protected_pages_submit"><input type="submit" value="<?= e(__('Connection')) ?>" /></p>
     </form>
 </div>

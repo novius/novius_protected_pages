@@ -10,41 +10,62 @@
 
 namespace Novius\ProtectedPages;
 
+use Fuel\Core\View;
 use Nos\Controller_Front_Application;
 use Nos\FrontCache;
+use Nos\I18n;
 use Nos\NotFoundException;
 
 class Controller_Front_Protectedpages extends Controller_Front_Application
 {
+    public function before()
+    {
+        parent::before();
 
-    public function action_main($args = array()) {
+        I18n::current_dictionary(array('novius_protected_pages::front'));
+    }
+
+    public function action_main($args = array())
+    {
+        $this->main_controller->disableCaching();
 
         $page = $this->main_controller->getPage();
         $enhancer_url = $this->main_controller->getEnhancerUrl();
 
         $protected_pages = \Session::get('protected_pages', array());
-        if (empty($protected_pages[$page->page_id]) || $protected_pages[$page->page_id] !== true) {
+        if (empty($protected_pages[$page->page_id]) || $protected_pages[$page->page_id] !== true || $enhancer_url == 'login') {
             if ($enhancer_url == 'connect') {
                 $login = \Arr::get($args, 'login', false);
                 $password = \Arr::get($args, 'password', false);
                 if (\Input::post('login', '') === $login && \Input::post('password', '') === $password) {
-                    $redirect = \Arr::get($protected_pages, $page->page_id, $this->main_controller->getContextUrl().$this->main_controller->getEnhancedUrlPath());
+                    $redirect = \Arr::get($protected_pages, $page->page_id, false);
+                    if (!is_string($redirect)) {
+                        $redirect = $this->main_controller->getContextUrl().$this->main_controller->getPageUrl();
+                    }
                     $protected_pages[$page->page_id] = true;
                     \Session::set('protected_pages', $protected_pages);
                     \Session::write();
                     \Response::redirect($redirect);
+                } else {
+                    \Session::set_flash('protected_pages_error', __('Bad login or password.'));
+                    \Session::set_flash('protected_pages_login', \Input::post('login', ''));
                 }
             } elseif ($enhancer_url == 'login') {
+
+                if ($protected_pages[$page->page_id]) {
+                    unset($protected_pages[$page->page_id]);
+                    \Session::set('protected_pages', $protected_pages);
+                    \Session::write();
+                };
+
                 $wysiwyg_name = $this->main_controller->getWysiwygName();
-                \Event::register_function('front.parse_wysiwyg', function (&$content) use ($wysiwyg_name)
-                {
+                \Event::register_function('front.parse_wysiwyg', function (&$content) use ($wysiwyg_name) {
                     if ($wysiwyg_name === $this->main_controller->getWysiwygName()) {
-                        ob_start();
-                        FrontCache::viewForgeUncached('novius_protected_pages::front/form', array(
+                        $content = (string) View::forge('novius_protected_pages::front/form', array(
+                            'error' => \Session::get_flash('protected_pages_error', '', true),
+                            'login' => \Session::get_flash('protected_pages_login', \Input::post('login', ''), true),
                             'url' => $this->main_controller->getContextUrl().$this->main_controller->getEnhancedUrlPath().'connect.html'
                         ), false);
-
-                        $content = ob_get_clean();
                     }
                 });
 

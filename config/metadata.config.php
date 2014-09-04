@@ -9,7 +9,7 @@
  */
 
 return array(
-    'name'    => 'Protected Pages',
+    'name'    => 'Protected pages',
     'version' => '1.0',
     'provider' => array(
         'name' => 'Novius',
@@ -17,6 +17,7 @@ return array(
     'namespace' => "Novius\ProtectedPages",
     'permission' => array(
     ),
+    'i18n_file' => 'novius_protected_pages::metadata',
     'icons' => array(
         64 => 'static/apps/novius_protected_pages/img/64/icon.png',
         32 => 'static/apps/novius_protected_pages/img/32/icon.png',
@@ -26,7 +27,7 @@ return array(
         'novius_protected_pages' => array(
             'title' => 'Protected pages',
             'desc'  => '',
-            'urlEnhancer' => 'novius_protected_pages/front/protectedpages/main', // URL of the enhancer
+            'urlEnhancer' => 'novius_protected_pages/front/protectedpages/main',
             'dialog' => array(
                 'contentUrl' => 'admin/novius_protected_pages/enhancer/popup',
                 'ajax' => true,

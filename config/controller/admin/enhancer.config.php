@@ -8,6 +8,8 @@
  * @link https://github.com/novius/novius_protected_pages
  */
 
+\Nos\I18n::current_dictionary(array('novius_protected_pages::common'));
+
 return array(
     'fields' => array(
         'login' => array(

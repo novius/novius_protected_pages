@@ -7,11 +7,20 @@
  * http://www.gnu.org/licenses/agpl-3.0.html
  * @link https://github.com/novius/novius_protected_pages
  */
+
+\Nos\I18n::current_dictionary(array('novius_protected_pages::front'));
 ?>
 <div class="protected_pages">
     <form method="POST" action="<?= $url ?>">
+<?php
+if (!empty($error)) {
+    ?>
+        <p class="protected_pages_error"><?= e($error) ?></p>
+    <?php
+}
+?>
         <p><input type="text" name="login" value="<?= e(\Input::post('login', '')); ?>" placeholder="<?= e(__('Login')) ?>" /></p>
         <p><input type="password" name="password" placeholder="<?= e(__('password')) ?>" /></p>
-        <p><input type="submit" value="<?= e(__('Connect')) ?>" /></p>
+        <p><input type="submit" value="<?= e(__('Connection')) ?>" /></p>
     </form>
 </div>
